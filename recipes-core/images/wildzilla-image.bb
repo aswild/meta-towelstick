@@ -11,6 +11,10 @@ IMAGE_INSTALL = " \
     make \
     python \
     python3 \
+    htop \
+    tmux \
+    zsh \
+    wild-linuxfiles \
 "
 
 inherit core-image
