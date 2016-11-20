@@ -1,0 +1,47 @@
+#! /bin/bash
+
+thisdir=$(pwd)
+
+if [[ ! -d $thisdir/meta-wildzilla ]]; then
+    echo "meta-wildzilla not found!"
+    echo "please source this script from the workspace root"
+    return 1
+fi
+WILDROOT=$(readlink -f $thisdir)
+
+if [[ -n $MACHINE ]]; then
+    echo "MACHINE set to $MACHINE"
+else
+    echo "No MACHINE given, defaulting to genericx86-64"
+    export MACHINE=genericx86-64
+fi
+
+if [[ -n $1 ]]; then
+    BUILD_DIR="$1"
+else
+    BUILD_DIR="build-$MACHINE"
+fi
+echo "Using BUILD_DIR $BUILD_DIR"
+
+DOWNLOAD_DIR=/var/oe-downloads
+if [[ ! -d ./downloads ]] && [[ -d $DOWNLOAD_DIR ]]; then
+    echo "symlinking downloads to $DOWNLOAD_DIR"
+    ln -s $DOWNLOAD_DIR downloads
+fi
+
+export TEMPLATECONF="$WILDROOT/meta-wildzilla/conf"
+echo $TEMPLATECONF
+source openembedded-core/oe-init-build-env $BUILD_DIR
+
+# now we're in the build directory and should have bblayers.conf and local.conf
+BB_CONF="conf/bblayers.conf"
+LOCAL_CONF="conf/local.conf"
+WILD_MARKER="### WILDZILLA ###"
+
+sed -i "s|@@WILDROOT@@|$WILDROOT|g" $BB_CONF
+sed -i "s|@@WILDROOT@@|$WILDROOT|g" $LOCAL_CONF
+
+sed -i "/$WILD_MARKER/,\$s|^MACHINE.*|MACHINE = \"$MACHINE\"|" $LOCAL_CONF
+
+# unset unused variables
+unset thisdir TEMPLATECONF BB_CONF LOCAL_CONF WILD_MARKER DOWNLOAD_DIR
