@@ -11,6 +11,7 @@ IMAGE_INSTALL = " \
     make \
     python \
     python3 \
+    ntfs-3g-ntfsprogs \
     htop \
     tmux \
     zsh \
