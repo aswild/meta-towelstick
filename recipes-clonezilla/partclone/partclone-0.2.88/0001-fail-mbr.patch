@@ -1,0 +1,14 @@
+diff --git a/fail-mbr/Makefile.am b/fail-mbr/Makefile.am
+index b0e5925..7fae559 100644
+--- a/fail-mbr/Makefile.am
++++ b/fail-mbr/Makefile.am
+@@ -6,5 +6,7 @@ clean-local:
+ 
+ distclean-local: clean-local
+ 
+-fail-mbr.bin:
+-	sh compile-mbr.sh
++# The compile script doesn't work well in yocto,
++# so ignore it and use fail-mbr.bin.orig
++fail-mbr.bin: fail-mbr.bin.orig
++	cp -vf $< $@
