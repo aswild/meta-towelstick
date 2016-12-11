@@ -9,6 +9,9 @@ SRC_URI = "http://free.nchc.org.tw/drbl-core/src/stable/clonezilla-${PV}.tar.bz2
 SRC_URI[md5sum] = "e07b06d52e3ac07832d14c10f23c566c"
 SRC_URI[sha256sum] = "d410b393f8f4403fc9fe13609481a7249553dd6d29da309c70132975ac9eb1ba"
 
+# Use "cp -dr" instead of "cp -a" to avoid host-user-contaminated
+SRC_URI += "file://0001-makefile-fix.patch"
+
 RDEPENDS_${PN} = " \
     bash \
     perl \
@@ -18,14 +21,28 @@ RDEPENDS_${PN} = " \
     drbl \
     partclone \
     partimage \
+    mtools \
+    dialog \
+    sshfs-fuse \
 "
 
 PACKAGE_ARCH = "all"
+FILES_${PN} = " \
+    /usr/bin/* \
+    /usr/sbin/* \
+    /usr/share/drbl/* \
+    /usr/share/clonezilla/* \
+    /etc/drbl/* \
+"
+
 
 S = "${WORKDIR}/clonezilla-${PV}"
 
 do_configure[noexec] = "1"
-do_compile[noexec] = "1"
+
+do_compile() {
+    oe_runmake all
+}
 
 do_install() {
     oe_runmake DESTDIR=${D} install

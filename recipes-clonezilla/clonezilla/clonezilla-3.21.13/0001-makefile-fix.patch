@@ -1,0 +1,29 @@
+diff --git a/Makefile b/Makefile
+index 62a554d..888a23f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -23,19 +23,19 @@ build:
+ install:
+ 	# install exec files
+ 	install -d ${DESTDIR}/usr/
+-	cp -a sbin bin ${DESTDIR}/usr/
++	cp -dr sbin bin ${DESTDIR}/usr/
+ 
+ 	# install setup dir
+ 	install -d $(DESTDIR)/$(SHAREDIR)/
+-	cp -a setup $(DESTDIR)/$(SHAREDIR)/
++	cp -dr setup $(DESTDIR)/$(SHAREDIR)/
+ 
+ 	# install other shared files
+-	cp -a samples prerun postrun scripts/sbin $(DESTDIR)/$(SHAREDIR)/
++	cp -dr samples prerun postrun scripts/sbin $(DESTDIR)/$(SHAREDIR)/
+ 	install -d $(DESTDIR)/usr/share/clonezilla/
+-	cp -a doc $(DESTDIR)/usr/share/clonezilla/
++	cp -dr doc $(DESTDIR)/usr/share/clonezilla/
+ 	# erase an extra COPYING
+ 	rm -f $(DESTDIR)/usr/share/clonezilla/doc/COPYING
+ 
+ 	# install config files
+ 	install -d $(DESTDIR)/etc/drbl/
+-	cp -a conf/* $(DESTDIR)/etc/drbl/
++	cp -dr conf/* $(DESTDIR)/etc/drbl/
