@@ -11,6 +11,8 @@
 # the option is a question of removing the # character and making any change to the
 # variable as required.
 
+TSROOT := "@TSROOT@"
+
 #
 # Machine Selection
 #
@@ -39,7 +41,7 @@ MACHINE ??= "qemux86-64"
 #
 # The default is a downloads directory under TOPDIR which is the build directory.
 #
-DL_DIR ?= "${TOPDIR}/../downloads"
+DL_DIR ?= "${TSROOT}/downloads"
 
 #
 # Where to place shared-state files
@@ -55,7 +57,7 @@ DL_DIR ?= "${TOPDIR}/../downloads"
 #
 # The default is a sstate-cache directory under TOPDIR.
 #
-SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
+SSTATE_DIR ?= "${TSROOT}/sstate-cache"
 
 #
 # Where to place the build output
@@ -196,11 +198,10 @@ PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"
 # this doesn't mean anything to you.
 CONF_VERSION = "1"
 
-### WILDZILLA ###
+### TOWELSTICK ###
 
 BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
 PARALLEL_MAKE ?= "-j${@oe.utils.cpu_count()}"
 
-MACHINE = "genericx86-64"
-DISTRO = "wildzilla"
-
+MACHINE = "@MACHINE@"
+DISTRO  = "@DISTRO@"

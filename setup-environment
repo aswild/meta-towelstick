@@ -1,20 +1,33 @@
-#! /bin/bash
+#!/bin/bash
+
+DEFAULT_MACHINE=genericx86-64
+DEFAULT_DISTRO=tstick
 
 thisdir=$(pwd)
 
-if [[ ! -d $thisdir/meta-wildzilla ]]; then
-    echo "meta-wildzilla not found!"
+if [[ ! -d $thisdir/meta-towelstick ]]; then
+    echo "meta-towelstick not found!"
     echo "please source this script from the workspace root"
     return 1
 fi
-WILDROOT=$(readlink -f $thisdir)
+TSROOT=$(readlink -f $thisdir)
+unset thisdir
 
 if [[ -n $MACHINE ]]; then
     echo "MACHINE set to $MACHINE"
 else
-    echo "No MACHINE given, defaulting to genericx86-64"
-    export MACHINE=genericx86-64
+    echo "No MACHINE given, defaulting to $DEFAULT_MACHINE"
+    MACHINE=$DEFAULT_MACHINE
 fi
+unset DEFAULT_MACHINE
+
+if [[ -n $DISTRO ]]; then
+    echo "DISTRO set to $DISTRO"
+else
+    echo "No DISTRO set, defaulting to $DEFAULT_DISTRO"
+    DISTRO=$DEFAULT_DISTRO
+fi
+unset DEFAULT_DISTRO
 
 if [[ -n $1 ]]; then
     BUILD_DIR="$1"
@@ -28,20 +41,36 @@ if [[ ! -d ./downloads ]] && [[ -d $DOWNLOAD_DIR ]]; then
     echo "symlinking downloads to $DOWNLOAD_DIR"
     ln -s $DOWNLOAD_DIR downloads
 fi
+unset DOWNLOAD_DIR
 
-export TEMPLATECONF="$WILDROOT/meta-wildzilla/conf"
-echo $TEMPLATECONF
+# oe-buildenv-internal will fail if the default python is python3
+# it's unsupported, but it actually works, so do some trickery
+if /usr/bin/env python --version 2>&1 | grep -q "Python 3"; then
+    pytmpdir=$(mktemp -d)
+    if [[ -d $pytmpdir ]]; then
+        ln -s $(which python2) $pytmpdir/python
+        export PATH="$pytmpdir:$PATH"
+    fi
+fi
+
+export TEMPLATECONF="$TSROOT/meta-towelstick/conf"
 source openembedded-core/oe-init-build-env $BUILD_DIR
+unset TEMPLATECONF
+
+# clean up PATH if we changed it earlier
+if [[ -d $pytmpdir ]]; then
+    export PATH="$(sed "s|${pytmpdir}:||" <<<"$PATH")"
+    rm -rf $pytmpdir
+    unset pytmpdir
+fi
 
 # now we're in the build directory and should have bblayers.conf and local.conf
 BB_CONF="conf/bblayers.conf"
 LOCAL_CONF="conf/local.conf"
-WILD_MARKER="### WILDZILLA ###"
 
-sed -i "s|@@WILDROOT@@|$WILDROOT|g" $BB_CONF
-sed -i "s|@@WILDROOT@@|$WILDROOT|g" $LOCAL_CONF
-
-sed -i "/$WILD_MARKER/,\$s|^MACHINE.*|MACHINE = \"$MACHINE\"|" $LOCAL_CONF
-
-# unset unused variables
-unset thisdir TEMPLATECONF BB_CONF LOCAL_CONF WILD_MARKER DOWNLOAD_DIR
+SUBST_VARS=(MACHINE DISTRO TSROOT)
+for var in "${SUBST_VARS[@]}"; do
+    eval value=\$$var
+    sed -i "s|@${var}@|${value}|g" $BB_CONF $LOCAL_CONF
+done
+unset BB_CONF LOCAL_CONF var value SUBST_VARS

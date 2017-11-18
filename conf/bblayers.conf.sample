@@ -5,18 +5,14 @@ LCONF_VERSION = "7"
 BBPATH = "${TOPDIR}"
 BBFILES ?= ""
 
-# Base Layers
-BBLAYERS = " \
-    @@WILDROOT@@/openembedded-core/meta \
-    @@WILDROOT@@/meta-intel \
-"
+# Base Layer
+BBLAYERS = "@TSROOT@/openembedded-core/meta"
 
 # OE/Yocto Extended Layers
-BBLAYERS += "@@WILDROOT@@/meta-intel"
-BBLAYERS += "@@WILDROOT@@/meta-yocto/meta-yocto-bsp"
-BBLAYERS += "@@WILDROOT@@/meta-openembedded/meta-oe"
-BBLAYERS += "@@WILDROOT@@/meta-openembedded/meta-filesystems"
+BBLAYERS =+ "@TSROOT@/meta-openembedded/meta-oe"
+BBLAYERS =+ "@TSROOT@/meta-openembedded/meta-filesystems"
+BBLAYERS =+ "@TSROOT@/meta-yocto/meta-yocto-bsp"
 
 # Wild Layers
-BBLAYERS += "@@WILDROOT@@/meta-wild-common"
-BBLAYERS += "@@WILDROOT@@/meta-wildzilla"
+BBLAYERS =+ "@TSROOT@/meta-wild-common"
+BBLAYERS =+ "@TSROOT@/meta-towelstick"
