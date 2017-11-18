@@ -1,18 +1,9 @@
-require recipes-core/images/core-image-minimal.bb
+inherit tstick-image
 
-IMAGE_INSTALL += "kernel-modules"
-
-IMAGE_FSTYPES += "iso"
-NOISO = "0"
-NOHDD = "0"
-LIVE_ROOTFS_TYPE = "squashfs-xz"
-ROOT_LIVE = ""
-LABELS_LIVE = "boot"
-MKDOSFS_EXTRAOPTS = "-n TOWELSTICK"
-
-EFI_PROVIDER = "grub-efi"
-APPEND = ""
-GRUB_SERIAL = ""
-
-INITRD_IMAGE_LIVE = "initramfs-tstick"
-inherit image-live
+IMAGE_INSTALL = " \
+    packagegroup-core-boot \
+    packagegroup-wild-core \
+    packagegroup-wild-utils \
+    packagegroup-wild-network-utils \
+    ${CORE_IMAGE_EXTRA_INSTALL} \
+"
