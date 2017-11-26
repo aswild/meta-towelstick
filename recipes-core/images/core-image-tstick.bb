@@ -5,5 +5,8 @@ IMAGE_INSTALL = " \
     packagegroup-wild-core \
     packagegroup-wild-utils \
     packagegroup-wild-network-utils \
+    \
+    packagegroup-tstick-full \
+    \
     ${CORE_IMAGE_EXTRA_INSTALL} \
 "
