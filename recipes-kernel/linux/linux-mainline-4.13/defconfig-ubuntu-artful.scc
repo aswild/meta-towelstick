@@ -1,0 +1,2 @@
+kconf hardware defconfig-artful-x86-64.cfg
+kconf hardware artful-to-yocto.cfg
