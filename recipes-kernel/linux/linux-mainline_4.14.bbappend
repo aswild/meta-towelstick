@@ -3,11 +3,13 @@
 # from meta-wild-common
 KERNEL_FEATURES += "squashfs overlayfs"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.13:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+#DEFCONFIG = "defconfig-ubuntu-artful.scc"
+DEFCONFIG = "defconfig-arch.scc"
 
 SRC_URI += " \
-    file://defconfig-ubuntu-artful.scc \
-    file://no-module-compress.cfg \
+    file://${DEFCONFIG} \
     file://udp-tunnel.cfg \
 "
 
