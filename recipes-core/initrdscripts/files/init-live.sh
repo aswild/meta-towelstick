@@ -13,16 +13,16 @@ ROOT_DISK=""
 # Copied from initramfs-framework. The core of this script probably should be
 # turned into initramfs-framework modules to reduce duplication.
 udev_daemon() {
-	OPTIONS="/sbin/udev/udevd /sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
+    OPTIONS="/sbin/udev/udevd /sbin/udevd /lib/udev/udevd /lib/systemd/systemd-udevd"
 
-	for o in $OPTIONS; do
-		if [ -x "$o" ]; then
-			echo $o
-			return 0
-		fi
-	done
+    for o in $OPTIONS; do
+        if [ -x "$o" ]; then
+            echo $o
+            return 0
+        fi
+    done
 
-	return 1
+    return 1
 }
 
 _UDEV_DAEMON=`udev_daemon`
@@ -38,6 +38,7 @@ early_setup() {
     modprobe isofs 2> /dev/null
 
     mkdir -p /run
+    mkdir -p /run/media
     mkdir -p /var/run
 
     $_UDEV_DAEMON --daemon
@@ -49,30 +50,10 @@ read_args() {
     for arg in $CMDLINE; do
         optarg=`expr "x$arg" : 'x[^=]*=\(.*\)'`
         case $arg in
-            root=*)
-                ROOT_DEVICE=$optarg ;;
-            rootimage=*)
-                ROOT_IMAGE=$optarg ;;
-            rootfstype=*)
-                modprobe $optarg 2> /dev/null ;;
-            LABEL=*)
-                label=$optarg ;;
-            video=*)
-                video_mode=$arg ;;
-            vga=*)
-                vga_mode=$arg ;;
-            console=*)
-                if [ -z "${console_params}" ]; then
-                    console_params=$arg
-                else
-                    console_params="$console_params $arg"
-                fi ;;
-            debugshell*)
-                if [ -z "$optarg" ]; then
-                        shelltimeout=30
-                else
-                        shelltimeout=$optarg
-                fi 
+            root=*)         ROOT_DEVICE=$optarg ;;
+            rootimage=*)    ROOT_IMAGE=$optarg ;;
+            rootfstype=*)   modprobe $optarg 2> /dev/null ;;
+            debugshell*)    debugshell=y ;;
         esac
     done
 }
@@ -89,8 +70,8 @@ boot_live_root() {
     touch ${ROOT_MOUNT}/etc/.updated ${ROOT_MOUNT}/var/.updated
 
     # Allow for identification of the real root even after boot
-    mkdir -p  ${ROOT_MOUNT}/media/realroot
-    mount -n --move "/run/media/${ROOT_DISK}" ${ROOT_MOUNT}/media/realroot
+    mkdir -p ${ROOT_MOUNT}/boot
+    mount -n --move "/run/media/${ROOT_DISK}" ${ROOT_MOUNT}/boot
 
     # Move the mount points of some filesystems over to
     # the corresponding directories under the real root filesystem.
@@ -120,6 +101,10 @@ early_setup
 [ -z "$CONSOLE" ] && CONSOLE="/dev/console"
 
 read_args
+if [ $debugshell = y ]; then
+    echo -e "Entering initramfs debug shell...\n" >$CONSOLE
+    exec sh
+fi
 
 echo "Waiting for removable media..."
 C=0
@@ -127,14 +112,14 @@ while true
 do
   for i in `ls /run/media 2>/dev/null`; do
       if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
-		found="yes"
-		ROOT_DISK="$i"
-		break
-	  elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
-		found="yes"
-		ISOLINUX="isolinux"
-		ROOT_DISK="$i"
-		break	
+        found="yes"
+        ROOT_DISK="$i"
+        break
+      elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
+        found="yes"
+        ISOLINUX="isolinux"
+        ROOT_DISK="$i"
+        break
       fi
   done
   if [ "$found" = "yes" ]; then
@@ -145,7 +130,7 @@ do
       echo -n " " $(( $shelltimeout - $C ))
       if [ $C -ge $shelltimeout ]; then
            echo "..."
-	   echo "Mounted filesystems"
+           echo "Mounted filesystems"
            mount | grep media
            echo "Available block devices"
            cat /proc/partitions
@@ -165,72 +150,60 @@ mount_and_boot() {
     mknod /dev/loop0 b 7 0 2>/dev/null
 
     if ! mount -o rw,loop,noatime,nodiratime /run/media/$ROOT_DISK/$ISOLINUX/$ROOT_IMAGE $ROOT_MOUNT ; then
-	fatal "Could not mount rootfs image"
+        fatal "Could not mount rootfs image"
     fi
 
     if touch $ROOT_MOUNT/bin 2>/dev/null; then
-	# The root image is read-write, directly boot it up.
-	boot_live_root
+        # The root image is read-write, directly boot it up.
+        boot_live_root
     fi
 
     # determine which unification filesystem to use
     union_fs_type=""
     if grep -q -w "overlay" /proc/filesystems; then
-	union_fs_type="overlay"
+        union_fs_type="overlay"
     elif grep -q -w "aufs" /proc/filesystems; then
-	union_fs_type="aufs"
+        union_fs_type="aufs"
     else
-	union_fs_type=""
+        union_fs_type=""
     fi
 
     # make a union mount if possible
     case $union_fs_type in
-	"overlay")
-	    mkdir -p /rootfs.ro /rootfs.rw
-	    if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
-		rm -rf /rootfs.ro /rootfs.rw
-		fatal "Could not move rootfs mount point"
-	    else
-		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
-		mkdir -p /rootfs.rw/upperdir /rootfs.rw/work
-		mount -t overlay overlay -o "lowerdir=/rootfs.ro,upperdir=/rootfs.rw/upperdir,workdir=/rootfs.rw/work" $ROOT_MOUNT
-		mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
-		mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
-		mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
-	    fi
-	    ;;
-	"aufs")
-	    mkdir -p /rootfs.ro /rootfs.rw
-	    if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
-		rm -rf /rootfs.ro /rootfs.rw
-		fatal "Could not move rootfs mount point"
-	    else
-		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
-		mount -t aufs -o "dirs=/rootfs.rw=rw:/rootfs.ro=ro" aufs $ROOT_MOUNT
-		mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
-		mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
-		mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
-	    fi
-	    ;;
-	"")
-	    mount -t tmpfs -o rw,noatime,mode=755 tmpfs $ROOT_MOUNT/media
-	    ;;
+        "overlay")
+            mkdir -p /rootfs.ro /rootfs.rw
+            if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
+                rm -rf /rootfs.ro /rootfs.rw
+                fatal "Could not move rootfs mount point"
+            else
+                mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
+                mkdir -p /rootfs.rw/upper /rootfs.rw/work
+                mount -t overlay overlay -o "lowerdir=/rootfs.ro,upper=/rootfs.rw/upper,workdir=/rootfs.rw/work" $ROOT_MOUNT
+                mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
+                mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
+                mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
+            fi
+            ;;
+        "aufs")
+            mkdir -p /rootfs.ro /rootfs.rw
+            if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
+                rm -rf /rootfs.ro /rootfs.rw
+                fatal "Could not move rootfs mount point"
+            else
+                mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
+                mount -t aufs -o "dirs=/rootfs.rw=rw:/rootfs.ro=ro" aufs $ROOT_MOUNT
+                mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
+                mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
+                mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
+            fi
+            ;;
+        "")
+            mount -t tmpfs -o rw,noatime,mode=755 tmpfs $ROOT_MOUNT/media
+            ;;
     esac
 
     # boot the image
     boot_live_root
 }
 
-if [ "$label" != "boot" -a -f $label.sh ] ; then
-	if [ -f /run/media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
-	    ./$label.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode $console_params
-	else
-	    fatal "Could not find $label script"
-	fi
-
-	# If we're getting here, we failed...
-	fatal "Target $label failed"
-fi
-
 mount_and_boot
-
