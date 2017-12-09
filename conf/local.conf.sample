@@ -205,3 +205,4 @@ PARALLEL_MAKE ?= "-j${@oe.utils.cpu_count()}"
 
 MACHINE = "@MACHINE@"
 DISTRO  = "@DISTRO@"
+PREFERRED_PROVIDER_virtual/kernel = "linux-mainline"
