@@ -36,7 +36,7 @@ else
 fi
 echo "Using BUILD_DIR $BUILD_DIR"
 
-DOWNLOAD_DIR=/var/oe-downloads
+DOWNLOAD_DIR=/var/cache/$USER/oe-downloads
 if [[ ! -d ./downloads ]] && [[ -d $DOWNLOAD_DIR ]]; then
     echo "symlinking downloads to $DOWNLOAD_DIR"
     ln -s $DOWNLOAD_DIR downloads
