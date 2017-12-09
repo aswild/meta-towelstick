@@ -1,0 +1,2 @@
+kconf hardware defconfig-arch.cfg
+kconf hardware arch-to-yocto.cfg
