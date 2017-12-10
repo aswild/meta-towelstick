@@ -11,12 +11,17 @@ def volume_id(d, split):
     else:
         return vid
 
-IMAGE_INSTALL += "kernel-modules"
+# kernel modules aren't installed by default, and neither is man even when doc-pkgs are enabled
+IMAGE_INSTALL_append = " \
+    kernel-modules \
+    ${@bb.utils.contains('IMAGE_FEATURES', 'doc-pkgs', 'man', '', d)} \
+"
 
 IMAGE_FEATURES += "read-only-rootfs"
 IMAGE_CLASSES += "image-buildinfo"
 IMAGE_CLASSES_remove = "qemuboot"
-IMAGE_FSTYPES = "ext4 squashfs-xz iso hddimg"
+#IMAGE_FSTYPES = "ext4 squashfs-xz iso hddimg"
+IMAGE_FSTYPES = "ext4 squashfs-xz hddimg"
 
 LABELS_LIVE = "boot"
 ROOT_LIVE = "tsroot=UUID=${@volume_id(d, True)}"
@@ -32,3 +37,5 @@ GRUB_SERIAL = ""
 
 inherit core-image
 inherit wild-image-postprocess
+
+ROOTFS_POSTPROCESS_COMMAND_remove = "copy_ssh_host_keys;"
