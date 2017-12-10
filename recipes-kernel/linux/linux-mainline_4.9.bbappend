@@ -5,11 +5,11 @@ KERNEL_FEATURES += "squashfs overlayfs"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.9:${THISDIR}/${PN}:"
 
-#DEFCONFIG = "defconfig-ubuntu-artful.scc"
-DEFCONFIG = "defconfig-arch.scc"
+DEFCONFIG = "defconfig-ubuntu.cfg ubuntu-to-yocto.cfg"
+#DEFCONFIG = "defconfig-arch.scc"
 
 SRC_URI += " \
-    file://${DEFCONFIG} \
+    ${@' '.join(['file://' + f for f in d.getVar('DEFCONFIG').split()])} \
     file://udp-tunnel.cfg \
 "
 
