@@ -19,7 +19,7 @@ IMAGE_CLASSES_remove = "qemuboot"
 IMAGE_FSTYPES = "ext4 squashfs-xz iso hddimg"
 
 LABELS_LIVE = "boot"
-ROOT_LIVE = "root=UUID=${@volume_id(d, True)}"
+ROOT_LIVE = "tsroot=UUID=${@volume_id(d, True)}"
 INITRD_IMAGE_LIVE = "initramfs-tstick"
 LIVE_ROOTFS_TYPE = "squashfs-xz"
 
