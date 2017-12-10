@@ -3,13 +3,20 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
-PACKAGES += "${PN}-extra-drivers"
+SUBPKGS = " \
+    ${PN}-extra-drivers \
+    ${PN}-utils \
+"
+PACKAGES += "${SUBPKGS} ${PN}-full"
+RDEPENDS_${PN}-full = "${SUBPKGS}"
+
 RDEPENDS_${PN}-extra-drivers = " \
     wireguard-module \
     wireguard-tools \
 "
 
-PACKAGES += "${PN}-full"
-RDEPENDS_${PN}-full = " \
-    ${PN}-extra-drivers \
+RDEPENDS_${PN}-utils = " \
+    gptfdisk \
+    xfsdump \
+    xfsprogs \
 "
