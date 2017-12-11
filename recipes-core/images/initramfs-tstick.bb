@@ -5,7 +5,10 @@ IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
 inherit core-image
 
 KERNEL_MODULES = " \
-    kernel-module-nouveau \
+    amdgpu \
+    i915 \
+    isofs \
+    nouveau \
 "
 
 UTILS = " \
@@ -19,7 +22,7 @@ PACKAGE_INSTALL = " \
     udev base-passwd \
     ${VIRTUAL-RUNTIME_base-utils} \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
-    ${KERNEL_MODULES} \
+    ${@' '.join(['kernel-module-'+m for m in d.getVar('KERNEL_MODULES').split()])} \
     ${UTILS} \
 "
 
