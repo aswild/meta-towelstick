@@ -1,6 +1,6 @@
 require core-image-tstick.bb
 
-IMAGE_FEATURES += "dev-pkgs doc-pkgs"
+IMAGE_FEATURES += "dev-pkgs doc-pkgs tools-sdk"
 
 IMAGE_INSTALL += " \
     packagegroup-core-buildessential \
