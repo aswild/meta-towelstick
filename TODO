@@ -1,0 +1,14 @@
+### To Do list for TowelStick ###
+
+In no particular order:
+
+ * add a default htop conf with my preferred settings (/etc/htoprc?)
+ * dig up my wpa_oneoff script and install it
+ * remove unneeded kernel modules
+ * remove unneeded firmware binaries
+ * option to copy rootfs to ramdisk so boot drive can be removed
+ * shutdown/reboot commands for the initramfs shell
+ * install doc packages to the core image? (only 32M in doc and 38M in man, which will compress very well)
+ * install partclone/clonezilla and get them actually working (the original intention of this distro lol)
+ * ntfs programs/drivers
+ * more backup/restore/imaging utilities
