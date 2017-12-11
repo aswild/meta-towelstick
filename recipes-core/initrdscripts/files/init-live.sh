@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
+export PATH=@PATH@
 
 # defaults, which may get overridden below
 ROOT_MOUNT="/rootfs"
@@ -22,6 +22,7 @@ read_args() {
             rootimage=*)    ROOT_IMAGE=$optarg ;;
             rootfstype=*)   modprobe $optarg 2> /dev/null ;;
             debugshell*)    debugshell=y ;;
+            nocontinue*)    nocontinue=y ;;
         esac
     done
 }
@@ -53,7 +54,9 @@ early_setup() {
     # support modular kernel
     modprobe isofs 2> /dev/null
 
+    # put /run on its own tmpfs
     mkdir -p /run
+    mount -t tmpfs -o rw,nosuid,nodev,mode=755 tmpfs /run
     mkdir -p /run/media
     mkdir -p /var/run
 
@@ -77,14 +80,20 @@ boot_live_root() {
     mkdir -p ${ROOT_MOUNT}/boot
     mount -n --move ${TSROOT_MOUNT} ${ROOT_MOUNT}${TSROOT_MOUNT}
 
+    mount -n --move /run  ${ROOT_MOUNT}/run
     mount -n --move /proc ${ROOT_MOUNT}/proc
     mount -n --move /sys  ${ROOT_MOUNT}/sys
     mount -n --move /dev  ${ROOT_MOUNT}/dev
 
     cd $ROOT_MOUNT
 
+    if [ "$nocontinue" = y ]; then
+        # debug option to stop right before leaving the initramfs
+        fatal "nocontinue was given on the cmdline. boot aborted"
+    fi
+
     # busybox switch_root supports -c option
-    exec switch_root -c /dev/console ${ROOT_MOUNT} /sbin/init ${CMDLINE} ||
+    exec switch_root -c /dev/console ${ROOT_MOUNT} /sbin/init ||
         fatal "Couldn't switch_root, dropping to shell"
 }
 
@@ -119,8 +128,21 @@ fi
 # In the former case (typically an iso), it tries to make a union mount if possible.
 # In the latter case, the root image could be mounted and then directly booted up.
 mount_and_boot() {
+    # I can't seem to control the UUID for ISO images, but mounting by label
+    # is tricky for ISO hybrid images, because there's 2 partitions with the same label
+    # (iso9660 and vfat), and mounting the vfat version works but is missing files like
+    # rootfs.img and the isolinux stuff.
+    # blkid and `mount LABEL=TSTICK-1234` both incorrectly find the broken vfat version,
+    # but udev finds what we want in /dev/block/by-label/
+    # Do the same with UUIDs just for consistency.
+    case $TSROOT in
+        LABEL=*) TSROOT_DEV=/dev/disk/by-label/${TSROOT#LABEL=} ;;
+        UUID=*)  TSROOT_DEV=/dev/disk/by-uuid/${TSROOT#UUID=} ;;
+        *)       TSROOT_DEV=$TSROOT ;;
+    esac
+
     mkdir -p $TSROOT_MOUNT
-    run_or_die mount -o ro $TSROOT $TSROOT_MOUNT
+    run_or_die mount -o ro $TSROOT_DEV $TSROOT_MOUNT
 
     [ -f "$TSROOT_MOUNT/$ROOT_IMAGE" ] ||
         fatal "Couldn't find rootfs image '$ROOT_IMAGE'"
@@ -134,8 +156,8 @@ mount_and_boot() {
         boot_live_root
     fi
 
-    ro_mount=/run/media/rootfs.ro
-    rw_mount=/run/media/rootfs.rw
+    ro_mount=/mnt/rootfs.ro
+    rw_mount=/mnt/rootfs.rw
 
     mkdir -p $ro_mount $rw_mount
     run_or_die mount -n --move $ROOT_MOUNT $ro_mount
@@ -143,9 +165,10 @@ mount_and_boot() {
     run_or_die mount -t tmpfs -o rw,noatime,mode=755 tmpfs $rw_mount
     run_or_die mkdir -p $rw_mount/upper $rw_mount/work
     run_or_die mount -t overlay overlay -o "lowerdir=$ro_mount,upperdir=$rw_mount/upper,workdir=$rw_mount/work" $ROOT_MOUNT
-    run_or_die mkdir -p $ROOT_MOUNT$ro_mount $ROOT_MOUNT$rw_mount
-    run_or_die mount --move $ro_mount ${ROOT_MOUNT}${ro_mount}
-    run_or_die mount --move $rw_mount ${ROOT_MOUNT}${rw_mount}
+
+    run_or_die mkdir -p ${ROOT_MOUNT}${ro_mount} ${ROOT_MOUNT}${rw_mount}
+    run_or_die mount -n --move $ro_mount ${ROOT_MOUNT}${ro_mount}
+    run_or_die mount -n --move $rw_mount ${ROOT_MOUNT}${rw_mount}
 
     # boot the image
     boot_live_root
