@@ -19,6 +19,7 @@ UTILS = " \
 
 PACKAGE_INSTALL = " \
     initramfs-live-boot \
+    initramfs-reboot \
     udev base-passwd \
     ${VIRTUAL-RUNTIME_base-utils} \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
