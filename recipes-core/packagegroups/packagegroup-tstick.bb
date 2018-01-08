@@ -21,6 +21,7 @@ RDEPENDS_${PN}-utils = " \
     iw \
     wireless-tools \
     wpa-supplicant \
+    wpa-oneoff \
     xfsdump \
     xfsprogs \
 "
