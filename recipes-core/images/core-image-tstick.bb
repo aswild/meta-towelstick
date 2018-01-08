@@ -1,5 +1,7 @@
 inherit tstick-image
 
+IMAGE_FEATURES += "doc-pkgs"
+
 IMAGE_INSTALL = " \
     packagegroup-core-boot \
     packagegroup-wild-core \
