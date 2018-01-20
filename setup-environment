@@ -43,6 +43,15 @@ if [[ ! -d ./downloads ]] && [[ -d $DOWNLOAD_DIR ]]; then
 fi
 unset DOWNLOAD_DIR
 
+if ( ! git -C openembedded-core symbolic-ref HEAD &>/dev/null ) && \
+        [[ -x meta-wild-common/yocto-patches/apply-patches.sh ]]; then
+    echo -ne "\nopenembedded-core is in a detached HEAD. Apply patches from meta-wild-common? (Y/n) "
+    read _apply_patch_answer
+    if [[ -z $_apply_patch_answer ]] || [[ $_apply_patch_answer == [yY]* ]]; then
+        meta-wild-common/yocto-patches/apply-patches.sh
+    fi
+fi
+
 # oe-buildenv-internal will fail if the default python is python3
 # it's unsupported, but it actually works, so do some trickery
 if /usr/bin/env python --version 2>&1 | grep -q "Python 3"; then
@@ -73,4 +82,4 @@ for var in "${SUBST_VARS[@]}"; do
     eval value=\$$var
     sed -i "s|@${var}@|${value}|g" $BB_CONF $LOCAL_CONF
 done
-unset BB_CONF LOCAL_CONF var value SUBST_VARS
+unset BB_CONF LOCAL_CONF var value SUBST_VARS _apply_patch_answer
