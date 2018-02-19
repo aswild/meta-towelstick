@@ -11,6 +11,7 @@ DEFCONFIG = "defconfig-ubuntu.cfg ubuntu-to-yocto.cfg"
 SRC_URI += " \
     ${@' '.join(['file://' + f for f in d.getVar('DEFCONFIG').split()])} \
     file://udp-tunnel.cfg \
+    file://towelstick.cfg \
 "
 
 # need to override the overrides in the bb
