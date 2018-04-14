@@ -3,7 +3,7 @@
 # from meta-wild-common
 KERNEL_FEATURES += "squashfs overlayfs"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.14:${THISDIR}/${PN}:"
 
 #DEFCONFIG = "defconfig-ubuntu-artful.scc"
 DEFCONFIG = "defconfig-arch.scc"
