@@ -5,7 +5,8 @@ KERNEL_FEATURES += "squashfs overlayfs"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.9:${THISDIR}/${PN}:"
 
-DEFCONFIG = "defconfig-ubuntu.cfg ubuntu-to-yocto.cfg"
+DEFCONFIG = "defconfig-debian.cfg debian-to-yocto.cfg"
+#DEFCONFIG = "defconfig-ubuntu.cfg ubuntu-to-yocto.cfg"
 #DEFCONFIG = "defconfig-arch.scc"
 
 SRC_URI += " \
