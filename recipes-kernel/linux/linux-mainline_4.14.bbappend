@@ -5,11 +5,11 @@ KERNEL_FEATURES += "squashfs overlayfs"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.14:${THISDIR}/${PN}:"
 
-DEFCONFIG = "defconfig-arch.cfg"
+DEFCONFIG_NAME = "ubuntu"
 
 SRC_URI += " \
-    file://${DEFCONFIG} \
-    file://towelstick.cfg \
+    file://defconfig-${DEFCONFIG_NAME}.cfg \
+    file://towelstick-${DEFCONFIG_NAME}.cfg \
     file://udp-tunnel.cfg \
 "
 
