@@ -23,6 +23,4 @@ do_compile() {
 
 do_install() {
     install -Dm755 ${WORKDIR}/reboot ${D}${base_sbindir}/reboot.${BPN}
-    #ln -s reboot ${D}${base_sbindir}/poweroff
-    #ln -s reboot ${D}${base_sbindir}/halt
 }

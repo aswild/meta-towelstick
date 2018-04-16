@@ -55,10 +55,6 @@ int mount(const char *source, const char *target,
 }
 int umount(const char *target)
 {
-#if 0
-    if (!strcmp(target, "/boot"))
-        return 1;
-#endif
     cout << "PHONY Unmount " << target << endl;
     return 0;
 }
