@@ -21,7 +21,7 @@ PACKAGE_INSTALL = " \
     initramfs-live-boot \
     initramfs-reboot \
     udev base-passwd \
-    ${VIRTUAL-RUNTIME_base-utils} \
+    busybox \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     ${@' '.join(['kernel-module-'+m for m in d.getVar('KERNEL_MODULES').split()])} \
     ${UTILS} \
