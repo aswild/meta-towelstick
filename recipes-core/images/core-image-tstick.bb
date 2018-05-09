@@ -9,6 +9,7 @@ IMAGE_INSTALL = " \
     packagegroup-wild-network-utils \
     \
     packagegroup-tstick-full \
+    packagegroup-clonezilla \
     \
     ${CORE_IMAGE_EXTRA_INSTALL} \
 "
