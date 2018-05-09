@@ -4,46 +4,22 @@ DESCRIPTION = "clonezilla"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://doc/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-PV = "3.21.13"
-SRC_URI = "http://free.nchc.org.tw/drbl-core/src/stable/clonezilla-${PV}.tar.bz2"
-SRC_URI[md5sum] = "e07b06d52e3ac07832d14c10f23c566c"
-SRC_URI[sha256sum] = "d410b393f8f4403fc9fe13609481a7249553dd6d29da309c70132975ac9eb1ba"
+PV = "3.27.16"
+SRC_URI = "http://free.nchc.org.tw/drbl-core/src/stable/clonezilla-${PV}.tar.xz"
+SRC_URI[md5sum] = "4beae63adc5d75632b2b2a07f0f095bc"
+SRC_URI[sha256sum] = "3e5f8d8c47d860361c9ed4a268351c40c15fa565fcbe90540bcab5e3cfa7ed3d"
 
-# Use "cp -dr" instead of "cp -a" to avoid host-user-contaminated
-SRC_URI += "file://0001-makefile-fix.patch"
+SRC_URI += "file://clonezilla-makefile.patch"
 
-RDEPENDS_${PN} = " \
-    bash \
-    perl \
-    drbl \
-    ntfsprogs \
-    ntfs-3g \
-    drbl \
-    partclone \
-    partimage \
-    mtools \
-    dialog \
-    sshfs-fuse \
-"
+RDEPENDS_${PN} = "bash perl drbl dialog"
 
 PACKAGE_ARCH = "all"
-FILES_${PN} = " \
-    /usr/bin/* \
-    /usr/sbin/* \
-    /usr/share/drbl/* \
-    /usr/share/clonezilla/* \
-    /etc/drbl/* \
-"
-
 
 S = "${WORKDIR}/clonezilla-${PV}"
 
-do_configure[noexec] = "1"
-
-do_compile() {
-    oe_runmake all
-}
+FILES_${PN} += "${datadir}/drbl"
 
 do_install() {
     oe_runmake DESTDIR=${D} install
+    rm -rf ${D}/CONTROL ${D}${datadir}/drbl/{pre,post}run ${D}${datadir}/drbl/samples
 }

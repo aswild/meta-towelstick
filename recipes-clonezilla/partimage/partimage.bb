@@ -21,4 +21,4 @@ S = "${WORKDIR}/partimage-${PV}"
 
 inherit autotools pkgconfig gettext
 
-EXTRA_OECONF = "--with-ssl-headers=${STAGING_DIR_TARGET}/usr/include/openssl"
+EXTRA_OECONF = "--with-ssl-headers=${STAGING_INCDIR}/openssl"

@@ -15,11 +15,11 @@ Signed-off-by: Marko Kohtala <marko.kohtala@gmail.com>
  src/server/netserver.h   | 6 ------
  4 files changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/src/client/netclient.cpp b/src/client/netclient.cpp
-index 30b8d5c..43b2672 100644
---- a/src/client/netclient.cpp
-+++ b/src/client/netclient.cpp
-@@ -43,9 +43,8 @@ CNetClient::CNetClient(bool bMustLogin, bool bUseSSL):CNet()
+Index: partimage-0.6.9/src/client/netclient.cpp
+===================================================================
+--- partimage-0.6.9.orig/src/client/netclient.cpp
++++ partimage-0.6.9/src/client/netclient.cpp
+@@ -43,9 +43,8 @@ CNetClient::CNetClient(bool bMustLogin,
      {
        showDebug(3, "initializing client ssl\n");
        SSLeay_add_ssl_algorithms();
@@ -30,11 +30,11 @@ index 30b8d5c..43b2672 100644
        if (!ctx)
          THROW(ERR_SSL_CTX);
        m_bUseSSL = (ctx != NULL);
-diff --git a/src/client/netclient.h b/src/client/netclient.h
-index 8423798..9d98b39 100644
---- a/src/client/netclient.h
-+++ b/src/client/netclient.h
-@@ -35,12 +35,6 @@ class CNetClient : public CNet
+Index: partimage-0.6.9/src/client/netclient.h
+===================================================================
+--- partimage-0.6.9.orig/src/client/netclient.h
++++ partimage-0.6.9/src/client/netclient.h
+@@ -35,12 +35,6 @@ private:
  #ifdef HAVE_SSL
    SSL_CTX * ctx;
    X509 * server_cert;
@@ -47,11 +47,11 @@ index 8423798..9d98b39 100644
  #endif
    bool m_bUseSSL;
    bool m_bMustLogin;
-diff --git a/src/server/netserver.cpp b/src/server/netserver.cpp
-index a542760..28c43cc 100644
---- a/src/server/netserver.cpp
-+++ b/src/server/netserver.cpp
-@@ -39,8 +39,7 @@ CNetServer::CNetServer( uint32_t ip4_addr, unsigned short int port):CNet()
+Index: partimage-0.6.9/src/server/netserver.cpp
+===================================================================
+--- partimage-0.6.9.orig/src/server/netserver.cpp
++++ partimage-0.6.9/src/server/netserver.cpp
+@@ -39,8 +39,7 @@ CNetServer::CNetServer(unsigned short in
      {
        SSL_load_error_strings();
        SSLeay_add_ssl_algorithms();
@@ -61,11 +61,11 @@ index a542760..28c43cc 100644
        if (!ctx)
          {
            ERR_print_errors_fp(stderr);
-diff --git a/src/server/netserver.h b/src/server/netserver.h
-index 01f6b6c..29d2a32 100644
---- a/src/server/netserver.h
-+++ b/src/server/netserver.h
-@@ -41,12 +41,6 @@ class CNetServer : public CNet
+Index: partimage-0.6.9/src/server/netserver.h
+===================================================================
+--- partimage-0.6.9.orig/src/server/netserver.h
++++ partimage-0.6.9/src/server/netserver.h
+@@ -41,12 +41,6 @@ private:
  #ifdef HAVE_SSL
    SSL_CTX * ctx;
    X509 * client_cert;
