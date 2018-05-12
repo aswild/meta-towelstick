@@ -9,6 +9,7 @@ KERNEL_MODULES = " \
     i915 \
     isofs \
     nouveau \
+    virtio-scsi \
 "
 
 UTILS = " \
