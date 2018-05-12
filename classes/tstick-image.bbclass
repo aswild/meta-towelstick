@@ -41,3 +41,18 @@ inherit core-image
 inherit wild-image-postprocess
 
 ROOTFS_POSTPROCESS_COMMAND_remove = "copy_ssh_host_keys;"
+
+inherit qemuboot
+QB_DEFAULT_FSTYPE = "hddimg"
+
+python do_write_qemuboot_conf_append() {
+    # hack to get qemu to boot in raw disk mode, i.e. without a kernel
+    # qemuboot is set to the conf file that was just written, rewrite it
+    # while deleting all the lines with 'kernel' in them
+    import re
+    r = re.compile(r'\w*kernel\w*')
+    with open(qemuboot, 'r') as fp:
+        conf = [line for line in fp if r.match(line) is None]
+    with open(qemuboot, 'w') as fp:
+        print(' '.join(conf), file=fp)
+}
