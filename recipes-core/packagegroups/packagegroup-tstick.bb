@@ -17,8 +17,10 @@ RDEPENDS_${PN}-extra-drivers = " \
 "
 
 RDEPENDS_${PN}-utils = " \
+    cryptsetup \
     gptfdisk \
     iw \
+    lvm2 \
     wireless-tools \
     wpa-supplicant \
     wpa-oneoff \
