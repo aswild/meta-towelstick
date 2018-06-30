@@ -5,7 +5,8 @@ KERNEL_FEATURES += "squashfs overlayfs"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.14:${THISDIR}/${PN}:"
 
-DEFCONFIG_NAME = "ubuntu"
+#DEFCONFIG_NAME = "ubuntu"
+DEFCONFIG_NAME = "arch"
 
 SRC_URI += " \
     file://defconfig-${DEFCONFIG_NAME}.cfg \
