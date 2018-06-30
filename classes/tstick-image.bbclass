@@ -31,6 +31,7 @@ ROOT_LIVE = "tsroot=LABEL=${BOOTIMG_VOLUME_ID}"
 
 LABELS_LIVE = "boot"
 INITRD_IMAGE_LIVE = "initramfs-tstick"
+INITRD_LIVE = "${DEPLOY_DIR_IMAGE}/${INITRD_IMAGE_LIVE}-${MACHINE}.${@d.getVar('INITRAMFS_FSTYPES').split()[0]}"
 LIVE_ROOTFS_TYPE = "squashfs-xz"
 
 EFI_PROVIDER = "grub-efi"

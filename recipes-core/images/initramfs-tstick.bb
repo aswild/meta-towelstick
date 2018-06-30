@@ -26,6 +26,7 @@ PACKAGE_INSTALL = " \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     ${@' '.join(['kernel-module-'+m for m in d.getVar('KERNEL_MODULES').split()])} \
     ${UTILS} \
+    kernel-modules \
 "
 
 IMAGE_FEATURES = ""
@@ -34,8 +35,10 @@ IMAGE_FEATURES = ""
 export IMAGE_BASENAME = "initramfs-tstick"
 IMAGE_LINGUAS = ""
 
-IMAGE_ROOTFS_SIZE = "8192"
+#IMAGE_ROOTFS_SIZE = "8192"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
+
+INITRAMFS_MAXSIZE = "524288"
 
 BAD_RECOMMENDATIONS += "busybox-syslog"
 
