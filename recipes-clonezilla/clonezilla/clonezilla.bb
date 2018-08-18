@@ -12,6 +12,15 @@ SRC_URI[sha256sum] = "3e5f8d8c47d860361c9ed4a268351c40c15fa565fcbe90540bcab5e3cf
 SRC_URI += "file://clonezilla-makefile.patch"
 
 RDEPENDS_${PN} = "bash perl drbl dialog"
+RRECOMMENDS_${PN} = " \
+    mtools \
+    ntfs-3g \
+    parted \
+    partclone \
+    partimage \
+    pigz \
+    sshfs-fuse \
+"
 
 PACKAGE_ARCH = "all"
 

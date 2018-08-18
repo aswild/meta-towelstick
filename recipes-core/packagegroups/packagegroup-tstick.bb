@@ -6,6 +6,7 @@ inherit packagegroup
 SUBPKGS = " \
     ${PN}-extra-drivers \
     ${PN}-utils \
+    ${PN}-clonezilla \
 "
 PACKAGES += "${SUBPKGS} ${PN}-full"
 RDEPENDS_${PN}-full = "${SUBPKGS}"
@@ -27,3 +28,5 @@ RDEPENDS_${PN}-utils = " \
     xfsdump \
     xfsprogs \
 "
+
+RDEPENDS_${PN}-clonezilla = "clonezilla"
