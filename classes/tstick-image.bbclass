@@ -13,7 +13,7 @@ IMAGE_INSTALL_append = " \
     ${@bb.utils.contains('IMAGE_FEATURES', 'doc-pkgs', 'man', '', d)} \
 "
 
-IMAGE_FEATURES += "read-only-rootfs"
+IMAGE_FEATURES += ""
 IMAGE_CLASSES += "image-buildinfo"
 IMAGE_CLASSES_remove = "qemuboot"
 IMAGE_FSTYPES = "ext4 squashfs-xz iso hddimg"
