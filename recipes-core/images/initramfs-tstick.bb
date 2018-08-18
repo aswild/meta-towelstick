@@ -4,14 +4,6 @@ LICENSE = "MIT"
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
 inherit core-image
 
-KERNEL_MODULES = " \
-    amdgpu \
-    i915 \
-    isofs \
-    nouveau \
-    virtio-scsi \
-"
-
 UTILS = " \
     util-linux-lsblk \
     usbutils \
@@ -21,10 +13,10 @@ UTILS = " \
 PACKAGE_INSTALL = " \
     initramfs-live-boot \
     initramfs-reboot \
+    packagegroup-initramfs-tstick-modules \
     udev base-passwd \
     busybox \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
-    ${@' '.join(['kernel-module-'+m for m in d.getVar('KERNEL_MODULES').split()])} \
     ${UTILS} \
 "
 
