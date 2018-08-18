@@ -21,6 +21,7 @@ RDEPENDS_${PN}-utils = " \
     cryptsetup \
     gptfdisk \
     iw \
+    ntfsprogs \
     lvm2 \
     wireless-tools \
     wpa-supplicant \
