@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/hint/bash
 
 DEFAULT_MACHINE=genericx86-64
 DEFAULT_DISTRO=tstick
@@ -36,50 +36,24 @@ else
 fi
 echo "Using BUILD_DIR $BUILD_DIR"
 
-DOWNLOAD_DIR=/var/cache/$USER/oe-downloads
-if [[ ! -d ./downloads ]] && [[ -d $DOWNLOAD_DIR ]]; then
-    echo "symlinking downloads to $DOWNLOAD_DIR"
-    ln -s $DOWNLOAD_DIR downloads
-fi
-unset DOWNLOAD_DIR
+source meta-wild-common/common-envsetup
+_wild_yocto_apply_patches
+_wild_yocto_symlink_cache_dir downloads
+_wild_yocto_symlink_cache_dir sstate-cache
 
-if ( ! git -C openembedded-core symbolic-ref HEAD &>/dev/null ) && \
-        [[ -x meta-wild-common/yocto-patches/apply-patches.sh ]]; then
-    echo -ne "\nopenembedded-core is in a detached HEAD. Apply patches from meta-wild-common? (Y/n) "
-    read _apply_patch_answer
-    if [[ -z $_apply_patch_answer ]] || [[ $_apply_patch_answer == [yY]* ]]; then
-        meta-wild-common/yocto-patches/apply-patches.sh
-    fi
-fi
 
-# oe-buildenv-internal will fail if the default python is python3
-# it's unsupported, but it actually works, so do some trickery
-if /usr/bin/env python --version 2>&1 | grep -q "Python 3"; then
-    pytmpdir=$(mktemp -d)
-    if [[ -d $pytmpdir ]]; then
-        ln -s $(which python2) $pytmpdir/python
-        export PATH="$pytmpdir:$PATH"
-    fi
-fi
-
+_wild_yocto_python3_hack pre
 export TEMPLATECONF="$TSROOT/meta-towelstick/conf"
 source openembedded-core/oe-init-build-env $BUILD_DIR
-unset TEMPLATECONF
-
-# clean up PATH if we changed it earlier
-if [[ -d $pytmpdir ]]; then
-    export PATH="$(sed "s|${pytmpdir}:||" <<<"$PATH")"
-    rm -rf $pytmpdir
-    unset pytmpdir
-fi
+unset TEMPLATECONF BUILD_DIR
+_wild_yocto_python3_hack post
 
 # now we're in the build directory and should have bblayers.conf and local.conf
 BB_CONF="conf/bblayers.conf"
 LOCAL_CONF="conf/local.conf"
 
-SUBST_VARS=(MACHINE DISTRO TSROOT)
-for var in "${SUBST_VARS[@]}"; do
-    eval value=\$$var
-    sed -i "s|@${var}@|${value}|g" $BB_CONF $LOCAL_CONF
-done
-unset BB_CONF LOCAL_CONF var value SUBST_VARS _apply_patch_answer
+# post-process conf files
+_wild_yocto_subst_confvars $BB_CONF $LOCAL_CONF -- TSROOT MACHINE DISTRO
+
+unset BB_CONF LOCAL_CONF TSROOT MACHINE DISTRO
+_wild_yocto_unset_functions

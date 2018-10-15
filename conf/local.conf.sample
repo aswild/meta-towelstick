@@ -1,3 +1,4 @@
+# vim: ft=bitbake
 #
 # This file is your local configuration file and is where all local user settings
 # are placed. The comments in this file give some guide to the options a new user
@@ -10,8 +11,6 @@
 # default values are provided as comments to show people example syntax. Enabling
 # the option is a question of removing the # character and making any change to the
 # variable as required.
-
-TSROOT := "@TSROOT@"
 
 #
 # Machine Selection
@@ -41,7 +40,7 @@ MACHINE ??= "qemux86-64"
 #
 # The default is a downloads directory under TOPDIR which is the build directory.
 #
-DL_DIR ?= "${TSROOT}/downloads"
+#DL_DIR ?= "${TOPDIR}/downloads"
 
 #
 # Where to place shared-state files
@@ -57,7 +56,7 @@ DL_DIR ?= "${TSROOT}/downloads"
 #
 # The default is a sstate-cache directory under TOPDIR.
 #
-SSTATE_DIR ?= "${TSROOT}/sstate-cache"
+#SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
 
 #
 # Where to place the build output
@@ -131,7 +130,7 @@ EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
 #   - 'image-swab' to perform host system intrusion detection
 # NOTE: if listing mklibs & prelink both, then make sure mklibs is before prelink
 # NOTE: mklibs also needs to be explicitly enabled for a given image, see local.conf.extended
-USER_CLASSES ?= "buildstats image-mklibs image-prelink"
+USER_CLASSES ?= "buildstats image-prelink"
 
 
 #
@@ -181,6 +180,24 @@ BB_DISKMON_DIRS = "\
     ABORT,${SSTATE_DIR},100M,1K \
     ABORT,/tmp,10M,1K"
 
+#
+# Shared-state files from other locations
+#
+# As mentioned above, shared state files are prebuilt cache data objects which can
+# used to accelerate build time. This variable can be used to configure the system
+# to search other mirror locations for these objects before it builds the data itself.
+#
+# This can be a filesystem directory, or a remote url such as http or ftp. These
+# would contain the sstate-cache results from previous builds (possibly from other
+# machines). This variable works like fetcher MIRRORS/PREMIRRORS and points to the
+# cache locations to check for the shared objects.
+# NOTE: if the mirror uses the same structure as SSTATE_DIR, you need to add PATH
+# at the end as shown in the examples below. This will be substituted with the
+# correct path within the directory structure.
+#SSTATE_MIRRORS ?= "\
+#file://.* http://someserver.tld/share/sstate/PATH;downloadfilename=PATH \n \
+#file://.* file:///some/local/dir/sstate/PATH"
+
 
 #
 # Qemu configuration
@@ -198,12 +215,29 @@ PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"
 # this doesn't mean anything to you.
 CONF_VERSION = "1"
 
+# use nconfig, not menuconfig
+KCONFIG_CONFIG_COMMAND = "nconfig"
+
+# Bitbake parallelism and priority
+BB_NUMBER_THREADS  = "${@oe.utils.cpu_count()}"
+PARALLEL_MAKE      = "-j${@oe.utils.cpu_count()}"
+BB_NICE_LEVEL      = "10"
+BB_TASK_NICE_LEVEL = "10"
+
 ### TOWELSTICK ###
+DL_DIR     = "${TSROOT}/downloads"
+SSTATE_DIR = "${TSROOT}/sstate-cache"
 
-BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
-PARALLEL_MAKE ?= "-j${@oe.utils.cpu_count()}"
+MACHINE = "##MACHINE##"
+DISTRO = "##DISTRO##"
 
-MACHINE = "@MACHINE@"
-DISTRO  = "@DISTRO@"
-PREFERRED_PROVIDER_virtual/kernel = "linux-mainline"
-PREFERRED_VERSION_linux-mainline = "4.14%"
+# Extra packages to install
+CORE_IMAGE_EXTRA_INSTALL = ""
+
+# Uncomment and set this to specify SSH host to copy to /etc/ssh on the
+# target. A whitespace-separated list and/or shell glob pattern will work
+#SSH_HOST_KEYS = "${NEWBSROOT}/ssh_host_keys/*"
+
+# Enable packagemanagement and ad-hoc feeds
+#IMAGE_FEATURES += "package-management"
+#FEED_DEPLOYDIR_BASE_URI = "http://server/newbs-ipk"
