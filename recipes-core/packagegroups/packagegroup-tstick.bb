@@ -18,11 +18,13 @@ RDEPENDS_${PN}-extra-drivers = " \
 "
 
 RDEPENDS_${PN}-utils = " \
+    arch-chroot \
     cryptsetup \
     gptfdisk \
     iw \
     ntfsprogs \
     lvm2 \
+    tree \
     wireless-tools \
     wpa-supplicant \
     wpa-oneoff \
