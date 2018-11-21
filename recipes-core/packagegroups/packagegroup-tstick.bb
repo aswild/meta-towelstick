@@ -25,7 +25,6 @@ RDEPENDS_${PN}-utils = " \
     ntfsprogs \
     lvm2 \
     tree \
-    wireless-tools \
     wpa-supplicant \
     wpa-oneoff \
     xfsdump \
