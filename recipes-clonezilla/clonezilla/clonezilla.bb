@@ -22,7 +22,7 @@ RRECOMMENDS_${PN} = " \
     sshfs-fuse \
 "
 
-PACKAGE_ARCH = "all"
+inherit allarch
 
 S = "${WORKDIR}/clonezilla-${PV}"
 

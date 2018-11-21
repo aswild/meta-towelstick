@@ -12,7 +12,8 @@ SRC_URI[sha256sum] = "aa5c5d5fabb0a0e6cd88c6a8ea07ff3b3655d56dc9898370834d6f3c26
 # Use "cp -dr" instead of "cp -a" to avoid host-user-contaminated
 SRC_URI += "file://drbl-makefile.patch"
 
-PACKAGE_ARCH = "all"
+inherit allarch
+
 RDEPENDS_${PN} = "bash perl"
 
 PACKAGES =+ "${PN}-gdm"
