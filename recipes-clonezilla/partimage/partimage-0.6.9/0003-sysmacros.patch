@@ -1,0 +1,13 @@
+Index: partimage-0.6.9/src/client/misc.h
+===================================================================
+--- partimage-0.6.9.orig/src/client/misc.h
++++ partimage-0.6.9/src/client/misc.h
+@@ -18,6 +18,8 @@
+ #ifndef MISC_H
+ #define MISC_H
+ 
++#include <sys/sysmacros.h>
++
+ #include "partimage.h"
+ #include "common.h"
+ 

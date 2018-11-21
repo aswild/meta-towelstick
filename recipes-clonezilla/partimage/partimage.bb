@@ -13,12 +13,17 @@ SRC_URI[sha256sum] = "753a6c81f4be18033faed365320dc540fe5e58183eaadcd7a5b69b096f
 SRC_URI += " \
     file://0001-partimage-0.6.9-zlib-1.2.6.patch \
     file://0002-use-SSLv3-by-default.patch \
+    file://0003-sysmacros.patch \
 "
 
-DEPENDS = "libnewt zlib bzip2 openssl"
+DEPENDS = "libnewt zlib bzip2 openssl libxcrypt"
 
 S = "${WORKDIR}/partimage-${PV}"
 
 inherit autotools pkgconfig gettext
 
 EXTRA_OECONF = "--with-ssl-headers=${STAGING_INCDIR}/openssl"
+
+do_configure_prepend() {
+    sed -i 's/CRYPTO_lock/X509_new/g' ${S}/configure.ac
+}
