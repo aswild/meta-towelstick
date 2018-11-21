@@ -1,20 +1,19 @@
 SUMMARY = "Utility to backup and restore partitions"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "e2fsprogs dosfstools ntfs-3g ncurses"
-#RDEPENDS_${PN} = "e2fsprogs libntfs-3g ncurses"
 
-PV = "0.2.91"
-SRC_URI = "http://free.nchc.org.tw/drbl-core/src/stable/partclone-${PV}.tar.gz"
-SRC_URI[md5sum] = "353aafab8ed8ed5b6c2111913aa8905a"
-SRC_URI[sha256sum] = "1f73aef9630547eab76717d2a9b87e8f15a79bc5ccebf78df71d9df36d336149"
+PV = "0.3.11"
+SRC_URI = "https://partclone.nchc.org.tw/download/unstable/${BP}.tar.gz"
+SRC_URI[md5sum] = "caede528e8a240aef9a1f12e714989c3"
+SRC_URI[sha256sum] = "d7df69c53ccf001cd734722f9acfc007f054db1559232155a1cc6de188d9c898"
 
 SRC_URI += "file://0001-fail-mbr.patch"
 
 S = "${WORKDIR}/${PN}-${PV}"
 
-inherit autotools gettext pkgconfig
+inherit autotools-brokensep gettext pkgconfig
 
 FILESYSTEMS = "extfs xfs fat exfat ntfs"
 EXTRA_OECONF = " \
