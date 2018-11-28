@@ -9,6 +9,7 @@ def volume_id(d):
 
 # kernel modules aren't installed by default, and neither is man even when doc-pkgs are enabled
 IMAGE_INSTALL_append = " \
+    packagegroup-base \
     kernel-modules \
     ${@bb.utils.contains('IMAGE_FEATURES', 'doc-pkgs', 'man', '', d)} \
 "
