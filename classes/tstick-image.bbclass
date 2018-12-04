@@ -38,8 +38,7 @@ EFI_PROVIDER = "grub-efi"
 APPEND = ""
 GRUB_SERIAL = ""
 
-inherit core-image
-inherit wild-image-postprocess
+inherit wild-image
 
 ROOTFS_POSTPROCESS_COMMAND_remove = "copy_ssh_host_keys;"
 
