@@ -13,9 +13,9 @@ RDEPENDS_${PN}-full = "${SUBPKGS}"
 
 RDEPENDS_${PN}-extra-drivers = " \
     linux-firmware \
-    wireguard-module \
     wireguard-tools \
 "
+RRECOMMENDS_${PN}-extra-drivers = "kernel-module-wireguard"
 
 RDEPENDS_${PN}-utils = " \
     arch-chroot \
