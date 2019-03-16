@@ -17,7 +17,7 @@ IMAGE_INSTALL_append = " \
 IMAGE_FEATURES += ""
 IMAGE_CLASSES += "image-buildinfo"
 IMAGE_CLASSES_remove = "qemuboot"
-IMAGE_FSTYPES = "ext4 squashfs-xz iso hddimg"
+IMAGE_FSTYPES = "squashfs-xz iso hddimg"
 
 # volume label, used for mounting the USB/ISO rootfs
 # Can be up to 11 characters, per FAT limitation
