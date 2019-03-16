@@ -20,8 +20,10 @@ RRECOMMENDS_${PN}-extra-drivers = "kernel-module-wireguard"
 RDEPENDS_${PN}-utils = " \
     arch-chroot \
     cryptsetup \
+    gnupg \
     gptfdisk \
     iw \
+    openssl \
     ntfsprogs \
     lvm2 \
     tree \
