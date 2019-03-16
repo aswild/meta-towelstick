@@ -6,7 +6,7 @@ inherit packagegroup
 SUBPKGS = " \
     ${PN}-extra-drivers \
     ${PN}-utils \
-    ${PN}-clonezilla \
+    ${PN}-backup \
 "
 PACKAGES += "${SUBPKGS} ${PN}-full ${PN}-devel"
 RDEPENDS_${PN}-full = "${SUBPKGS}"
@@ -33,7 +33,7 @@ RDEPENDS_${PN}-utils = " \
     xfsprogs \
 "
 
-RDEPENDS_${PN}-clonezilla = "clonezilla"
+RDEPENDS_${PN}-backup = "borgbackup clonezilla"
 
 RDEPENDS_${PN}-devel = " \
     python3 python3-modules python3-pip python3-setuptools \
