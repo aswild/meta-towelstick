@@ -4,7 +4,7 @@ IMAGE_FEATURES += "dev-pkgs doc-pkgs tools-sdk"
 
 IMAGE_INSTALL += " \
     packagegroup-core-buildessential \
-    python3 \
+    packagegroup-tstick-devel \
 "
 
 symlink_pyth() {

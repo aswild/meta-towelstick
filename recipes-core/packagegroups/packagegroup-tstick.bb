@@ -8,7 +8,7 @@ SUBPKGS = " \
     ${PN}-utils \
     ${PN}-clonezilla \
 "
-PACKAGES += "${SUBPKGS} ${PN}-full"
+PACKAGES += "${SUBPKGS} ${PN}-full ${PN}-devel"
 RDEPENDS_${PN}-full = "${SUBPKGS}"
 
 RDEPENDS_${PN}-extra-drivers = " \
@@ -34,3 +34,7 @@ RDEPENDS_${PN}-utils = " \
 "
 
 RDEPENDS_${PN}-clonezilla = "clonezilla"
+
+RDEPENDS_${PN}-devel = " \
+    python3 python3-modules python3-pip python3-setuptools \
+"
