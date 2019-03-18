@@ -24,6 +24,7 @@ RDEPENDS_${PN}-utils = " \
     gptfdisk \
     iw \
     openssl \
+    openssl-bin \
     ntfsprogs \
     lvm2 \
     tree \
