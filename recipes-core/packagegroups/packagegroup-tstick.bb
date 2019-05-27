@@ -4,18 +4,19 @@ LICENSE = "MIT"
 inherit packagegroup
 
 SUBPKGS = " \
-    ${PN}-extra-drivers \
+    ${PN}-base \
     ${PN}-utils \
     ${PN}-backup \
 "
 PACKAGES += "${SUBPKGS} ${PN}-full ${PN}-devel"
 RDEPENDS_${PN}-full = "${SUBPKGS}"
 
-RDEPENDS_${PN}-extra-drivers = " \
+RDEPENDS_${PN}-base = " \
     linux-firmware \
+    terminus-font-consolefonts \
     wireguard-tools \
 "
-RRECOMMENDS_${PN}-extra-drivers = "kernel-module-wireguard"
+RRECOMMENDS_${PN}-base = "kernel-module-wireguard"
 
 RDEPENDS_${PN}-utils = " \
     arch-chroot \
