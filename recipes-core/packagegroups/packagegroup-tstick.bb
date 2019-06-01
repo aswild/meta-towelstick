@@ -33,6 +33,7 @@ RDEPENDS_${PN}-utils = " \
     wpa-oneoff \
     xfsdump \
     xfsprogs \
+    zstd \
 "
 
 RDEPENDS_${PN}-backup = "borgbackup clonezilla"
