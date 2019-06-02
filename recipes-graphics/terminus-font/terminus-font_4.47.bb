@@ -42,3 +42,6 @@ do_install() {
 PACKAGES += "${PN}-consolefonts ${PN}-pcf"
 FILES_${PN}-consolefonts = "${datadir}/consolefonts"
 FILES_${PN}-pcf = "${datadir}/fonts/terminus"
+
+# ${PN} dependency is needed by ${PN}-dev
+ALLOW_EMPTY_${PN} = "1"
