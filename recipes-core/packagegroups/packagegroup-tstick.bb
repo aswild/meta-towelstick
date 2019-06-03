@@ -3,39 +3,41 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
-SUBPKGS = " \
-    ${PN}-extra-drivers \
-    ${PN}-utils \
-    ${PN}-backup \
-"
-PACKAGES += "${SUBPKGS} ${PN}-full ${PN}-devel"
-RDEPENDS_${PN}-full = "${SUBPKGS}"
-
-RDEPENDS_${PN}-extra-drivers = " \
-    linux-firmware \
-    wireguard-tools \
-"
-RRECOMMENDS_${PN}-extra-drivers = "kernel-module-wireguard"
-
-RDEPENDS_${PN}-utils = " \
+RDEPENDS_${PN} = " \
     arch-chroot \
+    borgbackup \
+    clonezilla \
     cryptsetup \
+    efibootmgr \
+    efivar \
     gnupg \
     gptfdisk \
     iw \
+    kernel-modules \
+    linux-firmware \
+    lvm2 \
+    ntfsprogs \
     openssl \
     openssl-bin \
-    ntfsprogs \
-    lvm2 \
+    terminus-font-consolefonts \
     tree \
-    wpa-supplicant \
+    wireguard-tools \
     wpa-oneoff \
+    wpa-supplicant \
     xfsdump \
     xfsprogs \
+    zstd \
 "
 
-RDEPENDS_${PN}-backup = "borgbackup clonezilla"
+RRECOMMENDS_${PN} = "kernel-module-wireguard"
 
+PACKAGES += "${PN}-devel"
 RDEPENDS_${PN}-devel = " \
-    python3 python3-modules python3-pip python3-setuptools \
+    ${PN} \
+    gdb \
+    python3 \
+    python3-modules \
+    python3-pip \
+    python3-setuptools \
+    strace \
 "
