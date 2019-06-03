@@ -8,6 +8,8 @@ RDEPENDS_${PN} = " \
     borgbackup \
     clonezilla \
     cryptsetup \
+    efibootmgr \
+    efivar \
     gnupg \
     gptfdisk \
     iw \
@@ -32,8 +34,10 @@ RRECOMMENDS_${PN} = "kernel-module-wireguard"
 PACKAGES += "${PN}-devel"
 RDEPENDS_${PN}-devel = " \
     ${PN} \
+    gdb \
     python3 \
     python3-modules \
     python3-pip \
     python3-setuptools \
+    strace \
 "
