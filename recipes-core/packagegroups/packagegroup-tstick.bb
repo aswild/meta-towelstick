@@ -8,6 +8,7 @@ RDEPENDS_${PN} = " \
     borgbackup \
     clonezilla \
     cryptsetup \
+    dislocker \
     efibootmgr \
     efivar \
     gnupg \
