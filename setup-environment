@@ -42,11 +42,9 @@ _wild_yocto_symlink_cache_dir downloads
 _wild_yocto_symlink_cache_dir sstate-cache
 
 
-_wild_yocto_python3_hack pre
 export TEMPLATECONF="$TSROOT/meta-towelstick/conf"
 source openembedded-core/oe-init-build-env $BUILD_DIR
 unset TEMPLATECONF BUILD_DIR
-_wild_yocto_python3_hack post
 
 # now we're in the build directory and should have bblayers.conf and local.conf
 BB_CONF="conf/bblayers.conf"
