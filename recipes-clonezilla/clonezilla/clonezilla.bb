@@ -4,12 +4,10 @@ DESCRIPTION = "clonezilla"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://doc/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-PV = "3.27.16"
-SRC_URI = "http://free.nchc.org.tw/drbl-core/src/stable/clonezilla-${PV}.tar.xz"
-SRC_URI[md5sum] = "4beae63adc5d75632b2b2a07f0f095bc"
-SRC_URI[sha256sum] = "3e5f8d8c47d860361c9ed4a268351c40c15fa565fcbe90540bcab5e3cfa7ed3d"
-
-SRC_URI += "file://clonezilla-makefile.patch"
+PV = "3.35.2"
+SRC_URI = "http://free.nchc.org.tw/drbl-core/src/stable/${BP}.tar.xz"
+SRC_URI[md5sum] = "aaf2f2c009b26cbaf0a2edcdab4f9cfc"
+SRC_URI[sha256sum] = "fa9d83d74f22a1993590c85c773ec7c374b9b0d2b1a8658e365171f80bee982e"
 
 RDEPENDS_${PN} = "bash perl drbl dialog"
 RRECOMMENDS_${PN} = " \
@@ -24,11 +22,10 @@ RRECOMMENDS_${PN} = " \
 
 inherit allarch
 
-S = "${WORKDIR}/clonezilla-${PV}"
-
 FILES_${PN} += "${datadir}/drbl"
 
 do_install() {
     oe_runmake DESTDIR=${D} install
     rm -rf ${D}/CONTROL ${D}${datadir}/drbl/{pre,post}run ${D}${datadir}/drbl/samples
+    chown -R root:root ${D}/*
 }
