@@ -142,7 +142,21 @@ mount_and_boot() {
     esac
 
     mkdir -p $TSROOT_MOUNT
-    run_or_die mount -o ro $TSROOT_DEV $TSROOT_MOUNT
+    local retries=10
+    local output
+    while [ $retries -gt 0 ]; do
+        output=`mount -o ro $TSROOT_DEV $TSROOT_MOUNT 2>&1`
+        ret=$?
+        echo "$output"
+        if [ $ret = "0" ]; then
+            break
+        fi
+
+        echo "Failed to mount $TSROOT_DEV on $TSROOT_MOUNT: '$output'"
+        let "retries--"
+        sleep 2
+    done
+    [ $retries != 0 ] || fatal "Failed to mount boot device"
 
     [ -f "$TSROOT_MOUNT/$ROOT_IMAGE" ] ||
         fatal "Couldn't find rootfs image '$ROOT_IMAGE'"
