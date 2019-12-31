@@ -1,6 +1,6 @@
 #!/hint/bash
 
-DEFAULT_MACHINE=genericx86-64
+DEFAULT_MACHINE=tstickx86-64
 DEFAULT_DISTRO=tstick
 
 thisdir=$(pwd)
