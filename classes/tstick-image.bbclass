@@ -14,10 +14,12 @@ IMAGE_INSTALL_append = " \
     ${@bb.utils.contains('IMAGE_FEATURES', 'doc-pkgs', 'man', '', d)} \
 "
 
+inherit squashfs-zstd
+
 IMAGE_FEATURES += ""
 IMAGE_CLASSES += "image-buildinfo"
 IMAGE_CLASSES_remove = "qemuboot"
-IMAGE_FSTYPES = "squashfs-xz iso hddimg"
+IMAGE_FSTYPES = "squashfs-zstd iso hddimg"
 
 # volume label, used for mounting the USB/ISO rootfs
 # Can be up to 11 characters, per FAT limitation
@@ -32,7 +34,7 @@ ROOT_LIVE = "tsroot=LABEL=${BOOTIMG_VOLUME_ID}"
 
 LABELS_LIVE = "boot"
 INITRD_IMAGE_LIVE = "initramfs-tstick"
-LIVE_ROOTFS_TYPE = "squashfs-xz"
+LIVE_ROOTFS_TYPE = "squashfs-zstd"
 
 EFI_PROVIDER = "grub-efi"
 APPEND = ""
