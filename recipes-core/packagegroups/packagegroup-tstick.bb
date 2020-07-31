@@ -11,6 +11,8 @@ RDEPENDS_${PN} = " \
     dislocker \
     efibootmgr \
     efivar \
+    exfat-utils \
+    fuse-exfat \
     gnupg \
     gptfdisk \
     iw \
@@ -20,6 +22,7 @@ RDEPENDS_${PN} = " \
     ntfsprogs \
     openssl \
     openssl-bin \
+    smartmontools \
     terminus-font-consolefonts \
     tree \
     wireguard-tools \
