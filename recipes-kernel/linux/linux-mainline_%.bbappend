@@ -1,7 +1,7 @@
 # Towelstick kernel customizations
 
 # from meta-wild-common
-KERNEL_FEATURES += "squashfs overlayfs"
+KERNEL_FEATURES += "squashfs.scc overlayfs.scc"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${LVSHORT}:${THISDIR}/${PN}:"
 
