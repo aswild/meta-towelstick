@@ -2,10 +2,10 @@ SUMMARY = "Utility to backup and restore partitions"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-PV = "0.3.12"
-SRCREV = "5e00059f07e2303e44a41edef01b8bddeac4d720"
+PV = "0.3.17"
+SRCREV = "300485bc3b1d025d73394f4086d5cfd701abc9d7"
 SRC_URI = " \
-    git://github.com/Thomas-Tsai/partclone \
+    git://github.com/Thomas-Tsai/partclone;nobranch=1 \
     file://0001-fail-mbr.patch \
 "
 
